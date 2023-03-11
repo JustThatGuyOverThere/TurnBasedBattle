@@ -19,10 +19,13 @@ namespace RandomEnemy
         public int attackPower { get; set; }
 
         public int att { get; set; }
+        
+        public int guardDuration { get; set; }
 
-        public int GuardValue{ get; set; }
+        public bool isguarding { get; set; }
 
-        public Enemy(string Name, int attackpower, int health , int guard)
+
+        public Enemy(string Name, int attackpower, int health)
         {
             Random rand = new Random();
             List<string> enemy = new List<string> { "orc", "theif", "knight", "elf" };
@@ -33,10 +36,10 @@ namespace RandomEnemy
 
 
             //int guard = rand.Next(1, 21);
-           // int att = rand.Next(1, 21); 
+            // int att = rand.Next(1, 21); 
 
-            GuardValue =guard;
-           // att = attackMulti;
+            //GuardValue =guard;
+            // att = attackMulti;
             this.Name = Newname;
             attackPower = attackpower;
             Health = health;
@@ -45,35 +48,71 @@ namespace RandomEnemy
 
         }
 
+        public void randomAttack(Player enemyToAttack)
+        {
+            Random rand = new Random();
+            int randomattack = rand.Next(1,3);
+
+            {
+                switch (randomattack)
+                {
+                    case 1:
+                        enemyToAttack.Attack(this);
+                        int att = rand.Next(1, 11);
+                        
+                        Console.WriteLine($"enemy {Name} attacked player {enemyToAttack.Name}for {attackPower + att} attackpower");
+                        enemyToAttack.takeDamage(attackPower + att);
+                        
+                        break;
+                    case 2:
+                        Guard(true);
+                        Console.WriteLine($"{Name} is guarding!");
+                        break;
+                   /* case 3:
+                        enemyToAttack.Attack(this);
+                        int Att = rand.Next(1, 11);
+                        Console.WriteLine($"enemy {Name} attacked player {enemyToAttack.Name}for {attackPower + Att} attackpower");
+                        enemyToAttack.takeDamage(attackPower + Att);
+                        break;*/
+                    
 
 
+                     
+                }
 
+            }
+        }
         public void Attack(Player enemyToattack)
         {
             int att = Random.Shared.Next(1, 11);
-            Console.WriteLine($"player {Name} attacked player {enemyToattack.Name}for {attackPower + att} attackpower");
+            Console.WriteLine($"enemy {Name} attacked player {enemyToattack.Name}for {attackPower + att} attackpower");
             enemyToattack.takeDamage(attackPower + att);
 
         }
-      
-        public void Guard(Player enemyToguard)
+
+
+        public void Guard(bool Isguarding)
+
         {
-            Random rand = new Random();
-          //int GuardValue = rand.Next(1, 21);
-            Console.WriteLine($"player {Name} is guarding with a guard value of {GuardValue}");
-         //  int guardDamage =Math.Max (attackPower + att - GuardValue, 0);
-            enemyToguard.negateDamage;
-            
+            Console.WriteLine("enemy took a defensive stance");
+            isguarding = Isguarding;
+            guardDuration = 1;
         }
 
-        public void negateDamage(int damage)
+
+
+
+        public void takeDamage(int damage)
         {
+            if (isguarding && guardDuration > 0)
             {
-                int ndamage = damage - GuardValue;
+                Random rand = new Random();
+                int GuardValue = rand.Next(1, 21);
+                int ndamage = Math.Max(damage - GuardValue, 0);
 
                 if (ndamage <= 0)
                 {
-                    Console.WriteLine($"{Name} negated damage");
+                    Console.WriteLine($"{Name} negated damage {ndamage}");
                 }
                 else
                 {
@@ -81,42 +120,29 @@ namespace RandomEnemy
                     Console.WriteLine($"Player {Name} took {ndamage} damage and now has {Health} health remaining");
                 }
 
-                if (Health <= 0)
+                if (GuardValue == 0)
                 {
-                    Console.WriteLine($"the enemy {Name} has died");
-                }
-                else if (Health > 0)
-                {
-                    Console.WriteLine("health remaining {0}", Health);
+                    Console.WriteLine($"{Name}'s guard was broken and took full damage");
+                    Health -= damage;
+                    Console.WriteLine($"Player {Name} took {damage} damage and now has {Health} health remaining");
+                    isguarding = false;
                 }
             }
-        }
-        public void takeDamage(int damage)
-        {
-            
-            Health -= damage;
+            else
             {
-                
-
-                //Health -= damage;
-                Console.WriteLine($"Player {Name} took {damage} damage amd now has {Health} health remaining");
+                Health -= damage;
+                Console.WriteLine($"enemy {Name} took {damage} damage and now has {Health} health remaining");
             }
+
             if (Health <= 0)
             {
-                Console.WriteLine($"the enemy {Name} has died");
-
-
+                Console.WriteLine($"The enemy {Name} has died");
                 Console.WriteLine("{0} Has been defeated", Name);
-
             }
             else if (Health > 0)
             {
-                Console.WriteLine("health remaining {0}", Health);
+                Console.WriteLine("Health remaining {0}", Health);
             }
-
-            
         }
-
     }
 }
-

@@ -15,18 +15,21 @@ namespace player
         public int Health { get; set; }
         public int attackPower { get; set; }
 
+        public int guardDuration { get; set; }
         public int att { get; set; }
 
-        public int GuardValue { get; set; }
+        //   public int GuardValue { get; set; }
 
-        public Player(string name, int attackpower, int health, int guard)
+        public bool IsGuarding;
+
+        public Player(string name, int attackpower, int health)
         {
 
             Random rand = new Random();
-           // int att = rand.Next(1, 11);
-           // int guard = rand.Next(1, 11);  
-           GuardValue = guard;
-           // this.att = attackMulti;
+            // int att = rand.Next(1, 11);
+            // int guard = rand.Next(1, 11);  
+
+            // this.att = attackMulti;
             Name = name;
             attackPower = attackpower;
             Health = health;
@@ -38,26 +41,30 @@ namespace player
             Random rand = new Random();
             int att = rand.Next(1, 11);
             Console.WriteLine($"player {Name} attacked  {playerToattack.Name}for {attackPower + att} attackpower");
-            playerToattack.takeDamage(attackPower +att);
+            playerToattack.takeDamage(attackPower + att);
 
         }
-        public void Guard(Player playerToguard)
+        public void Guarding(bool Isguarding)
         {
-            Random rand = new Random();
-           // int GuardValue = rand.Next(1, 21);
-            Console.WriteLine($"player {Name} is guarding with a guard value of {GuardValue}");
-           // int guardDamage = Math.Max(attackPower + att - GuardValue, 0);
-            playerToguard.negateDamage(GuardValue);
+
+            IsGuarding = true;
+            guardDuration = 1;
+            Console.WriteLine("{0} took a defensive stance", Name);
+
+
         }
 
-        public void negateDamage(int damage)
+        public void takeDamage(int damage)
         {
+            if (IsGuarding && guardDuration > 0)
             {
-                int ndamage = damage - GuardValue;
+                Random rand = new Random();
+                int GuardValue = rand.Next(1, 21);
+                int ndamage = Math.Max(damage - GuardValue, 0);
 
                 if (ndamage <= 0)
                 {
-                    Console.WriteLine($"{Name} negated damage");
+                    Console.WriteLine($"{Name} negated damage {ndamage}");
                 }
                 else
                 {
@@ -65,47 +72,29 @@ namespace player
                     Console.WriteLine($"Player {Name} took {ndamage} damage and now has {Health} health remaining");
                 }
 
-                if (Health <= 0)
+                if (GuardValue == 0)
                 {
-                    Console.WriteLine($"the enemy {Name} has died");
-                }
-                else if (Health > 0)
-                {
-                    Console.WriteLine("health remaining {0}", Health);
+                    Console.WriteLine($"{Name}'s guard was broken and took full damage");
+                    Health -= damage;
+                    Console.WriteLine($"Player {Name} took {damage} damage and now has {Health} health remaining");
+                    IsGuarding = false;
                 }
             }
-        }
-        public void takeDamage(int damage)
-        {
-            int ndamage = damage - GuardValue;
-
-            if (ndamage <= 0) { Console.WriteLine($"{Name} negated damage"); }
             else
-
             {
-                Health -= ndamage;
-
-                //Health -= damage;
-
-                //Health -= damage;
-                Console.WriteLine($"Player {Name} took {damage} damage amd now has {Health} health remaining");
+                Health -= damage;
+                Console.WriteLine($"Player {Name} took {damage} damage and now has {Health} health remaining");
             }
+
             if (Health <= 0)
             {
-                Console.WriteLine($"the player {Name} has died");
-
-
+                Console.WriteLine($"The player {Name} has died");
                 Console.WriteLine("{0} Has been defeated", Name);
-
             }
             else if (Health > 0)
             {
-                Console.WriteLine("health remaining {0}", Health);
-            }
-            {
-                
+                Console.WriteLine("Health remaining {0}", Health);
             }
         }
-
     }
 }

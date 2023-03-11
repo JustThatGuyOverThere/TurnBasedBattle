@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using RandomEnemy;
+using System.Runtime.Versioning;
 
 namespace game;
 
@@ -25,51 +26,55 @@ public static class battle
         string player1Name = Console.ReadLine();
         //att
         //  int attack = att.Next (1, 21);
-        var newPlayer = new Player(player1Name, 10, 100, 15 );
+        var newPlayer = new Player(player1Name, 10, 100);
 
-        Enemy newenemy = new Enemy("some_name", 15, 100, 20 );
+        Enemy newenemy = new Enemy("some_name", 10, 100);
 
         Console.WriteLine("you have encounted {0}", newenemy.Name);
 
 
 
-        bool alive = false;
-        while (!alive)
+        bool dead = false;
+        while (!dead)
 
         {
-
-            Console.WriteLine("enter attack or run");
-
-            string attack = Console.ReadLine();
-
-            if (attack == "attack")
+           // bool Attack = false;
+            //while (!Attack)
+                
+            Console.WriteLine("enter attack or guard");
+            var attack = Console.ReadLine();
+            
+            
+            switch (attack)
             {
-                
-                alive = false;
-                newPlayer.Attack(newenemy);
-                
-                
-                newenemy.Guard(newPlayer);
+                case "attack":
+                    newPlayer.Attack(newenemy);
+                    break;
+                case "guard":
+                    newPlayer.Guarding(true);
+                    break;
 
-                {
-
-                   newPlayer.Attack(newenemy);
-                }
-                    if (newenemy.Health <= 0)
-                {
-                    Console.WriteLine("The enemy has been defeated!");
-                    
-                }
             }
 
-            // alive = true;
 
-        }
+                    newenemy.randomAttack(newPlayer);
 
-        
+
+                if (newenemy.Health <= 0)
+                {dead = true;
+                    Console.WriteLine("The enemy has been defeated!");
+
+                }
+
+         
+
+            }
+
+
 
         }
     }
+
 
     /* string PlayerName = Console.ReadLine();
      var newplayer = new Player()
