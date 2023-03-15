@@ -1,4 +1,5 @@
 ﻿using RandomEnemy;
+using BattleRules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace player
 {
@@ -15,7 +17,8 @@ namespace player
         public int Health { get; set; }
         public int attackPower { get; set; }
 
-        public int guardDuration { get; set; }
+        public int guardDuration;
+       
         public int att { get; set; }
 
         //   public int GuardValue { get; set; }
@@ -33,11 +36,16 @@ namespace player
             Name = name;
             attackPower = attackpower;
             Health = health;
+           
+    
 
+        
 
         }
-        public void Attack(Enemy playerToattack)
+        public void Attack(Enemy playerToattack)//, BattleRules Rules)
         {
+            
+
             Random rand = new Random();
             int att = rand.Next(1, 11);
             Console.WriteLine($"player {Name} attacked  {playerToattack.Name}for {attackPower + att} attackpower");
@@ -52,6 +60,21 @@ namespace player
             Console.WriteLine("{0} took a defensive stance", Name);
 
 
+        }
+
+        public void FireBall(Enemy Playertoattack)
+        {
+            Random rando = new Random();
+            int multi = rando.Next(1, 11);
+
+            Console.WriteLine($"Player { Name} used fireball {Playertoattack.Name} for {multi*3} damage" );
+
+            Playertoattack.takeDamage(multi*3);
+                }
+        public void ResetStatus()
+        {
+            IsGuarding = false;  // Set the player's guarding status to false
+            guardDuration = 0;  // Set the player's guard duration to 0
         }
 
         public void takeDamage(int damage)

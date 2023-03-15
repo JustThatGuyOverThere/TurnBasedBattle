@@ -1,4 +1,5 @@
 ﻿using player;
+using BattleRules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -19,12 +20,12 @@ namespace RandomEnemy
         public int attackPower { get; set; }
 
         public int att { get; set; }
-        
-        public int guardDuration { get; set; }
+
+        public int guardDuration;
 
         public bool isguarding { get; set; }
 
-
+        
         public Enemy(string Name, int attackpower, int health)
         {
             Random rand = new Random();
@@ -57,11 +58,11 @@ namespace RandomEnemy
                 switch (randomattack)
                 {
                     case 1:
-                        enemyToAttack.Attack(this);
-                        int att = rand.Next(1, 11);
+                        Attack(enemyToAttack);
+                        //int att = rand.Next(1, 11);
                         
-                        Console.WriteLine($"enemy {Name} attacked player {enemyToAttack.Name}for {attackPower + att} attackpower");
-                        enemyToAttack.takeDamage(attackPower + att);
+                       // Console.WriteLine($"enemy {Name} attacked player {enemyToAttack.Name}for {attackPower + att} attackpower");
+                       // enemyToAttack.takeDamage(attackPower + att);
                         
                         break;
                     case 2:
@@ -100,7 +101,11 @@ namespace RandomEnemy
         }
 
 
-
+        public void ResetStatus()
+        {
+            isguarding = false;  // Set the player's guarding status to false
+            guardDuration = 0;  // Set the player's guard duration to 0
+        }
 
         public void takeDamage(int damage)
         {

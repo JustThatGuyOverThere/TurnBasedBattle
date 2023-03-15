@@ -9,12 +9,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using RandomEnemy;
+using BattleRules;
 using System.Runtime.Versioning;
 
 namespace game;
 
 
-public static class battle
+public static class Battle
 
 {
 
@@ -29,6 +30,7 @@ public static class battle
         var newPlayer = new Player(player1Name, 10, 100);
 
         Enemy newenemy = new Enemy("some_name", 10, 100);
+        var Rules = new battleRules(); 
 
         Console.WriteLine("you have encounted {0}", newenemy.Name);
 
@@ -38,10 +40,10 @@ public static class battle
         while (!dead)
 
         {
-           // bool Attack = false;
+            // bool Attack = false;
             //while (!Attack)
-                
-            Console.WriteLine("enter attack or guard");
+           
+            Console.WriteLine("enter attack,guard, fireball");
             var attack = Console.ReadLine();
             
             
@@ -49,18 +51,22 @@ public static class battle
             {
                 case "attack":
                     newPlayer.Attack(newenemy);
+                    
                     break;
                 case "guard":
                     newPlayer.Guarding(true);
+                   
                     break;
-
+                case "FireBall":
+                    newPlayer.FireBall(newenemy);
+                    break;
             }
 
 
                     newenemy.randomAttack(newPlayer);
+            Rules.EndofTurn();
 
-
-                if (newenemy.Health <= 0)
+            if (newenemy.Health <= 0)
                 {dead = true;
                     Console.WriteLine("The enemy has been defeated!");
 
@@ -68,12 +74,12 @@ public static class battle
 
          
 
-            }
-
-
-
         }
+
+
+
     }
+}
 
 
     /* string PlayerName = Console.ReadLine();
